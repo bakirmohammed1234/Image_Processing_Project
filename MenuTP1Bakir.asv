@@ -22,7 +22,7 @@ function varargout = MenuTP1Bakir(varargin)
 
 % Edit the above text to modify the response to help MenuTP1Bakir
 
-% Last Modified by GUIDE v2.5 26-Dec-2024 15:10:21
+% Last Modified by GUIDE v2.5 16-Feb-2025 23:58:30
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -152,27 +152,150 @@ function Fpb_Callback(hObject, eventdata, handles)
 % hObject    handle to Fpb (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+I = handles.courant_data;
+ F=fftshift(fft2(I)); 
+% %calcul de la taille de l'image; 
+ M=size(F,1); 
+ N=size(F,2); 
+ P=size(F,3); 
+ H0=zeros(M,N); 
+ D0=1; 
+ M2=round(M/2); 
+ N2=round(N/2); 
+ H0(M2-D0:M2+D0,N2-D0:N2+D0)=1; 
+ for i=1:M 
+  for j=1:N 
+      G(i,j)=F(i,j)*H0(i,j); 
+ end 
+ end 
+ g=ifft2(G); 
+ imshow(abs(g),[0,255]);
 
 % --------------------------------------------------------------------
 function Fpbb_Callback(hObject, eventdata, handles)
 % hObject    handle to Fpbb (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+I = handles.courant_data;
+%I = imread('eight.tif');
 
+F=fftshift(fft2(I)); 
+%calcul de la taille de l'image; 
+M=size(F,1); 
+N=size(F,2); 
+P=size(F,3);
+
+H0=zeros(M,N); 
+D0=1; 
+M2=round(M/2); 
+N2=round(N/2); 
+H0(M2-D0:M2+D0,N2-D0:N2+D0)=1; 
+
+n=3; 
+
+for i=1:M 
+for j=1:N 
+%H(i,j)=1/(1+(H0(i,j)/D0)^(2*n)); 
+G(i,j)=F(i,j)*H0(i,j); 
+end 
+end 
+
+g=ifft2(G); 
+
+%subplot(1,2,1);imshow(I);title('image originale'); 
+%subplot(1,2,2);
+imshow(abs(g),[0,255]);%title('image filtr?e'); 
+% --------------------------------------------------------------------
+function menuFph_Callback(hObject, eventdata, handles)
+% hObject    handle to menuFph (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+I=handles.courant_data;
+%charge; 
+F=fftshift(fft2(I)); 
+%calcul de la taille de l'image; 
+M=size(F,1); 
+N=size(F,2); 
+P=size(F,3); 
+
+H1=ones(M,N); 
+D0=1; 
+M2=round(M/2); 
+N2=round(N/2); 
+H1(M2-D0:M2+D0,N2-D0:N2+D0)=0; 
+for i=1:M 
+for j=1:N 
+G(i,j)=F(i,j)*H1(i,j); 
+end 
+end 
+g=ifft2(G); 
+%subplot(1,2,1);imshow(I);title('image originale'); 
+%subplot(1,2,2);
+imshow(255-abs(g),[0,255]);
+%title('image filtr?e');
 
 % --------------------------------------------------------------------
 function Fph_Callback(hObject, eventdata, handles)
 % hObject    handle to Fph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+I=handles.courant_data;
+%charge; 
+F=fftshift(fft2(I)); 
+%calcul de la taille de l'image; 
+M=size(F,1); 
+N=size(F,2); 
+P=size(F,3); 
 
+H1=ones(M,N); 
+D0=1; 
+M2=round(M/2); 
+N2=round(N/2); 
+H1(M2-D0:M2+D0,N2-D0:N2+D0)=0; 
+for i=1:M 
+for j=1:N 
+G(i,j)=F(i,j)*H1(i,j); 
+end 
+end 
+g=ifft2(G); 
+%subplot(1,2,1);imshow(I);title('image originale'); 
+%subplot(1,2,2);
+imshow(255-abs(g),[0,255]);
+%title('image filtr?e');
 
 % --------------------------------------------------------------------
 function Fphb_Callback(hObject, eventdata, handles)
 % hObject    handle to Fphb (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+I=handles.courant_data;
+
+F=fftshift(fft2(I)); 
+%calcul de la taille de l'image; 
+M=size(F,1); 
+N=size(F,2); 
+P=size(F,3); 
+
+H1=ones(M,N); 
+D0=1; 
+M2=round(M/2); 
+N2=round(N/2); 
+H1(M2-D0:M2+D0,N2-D0:N2+D0)=0; 
+
+n=3; 
+
+for i=1:M 
+for j=1:N 
+H(i,j)=1/(1+(H1(i,j)/D0)^(2*n)); 
+G(i,j)=F(i,j)*H(i,j); 
+end 
+end 
+
+g=ifft2(G); 
+
+%subplot(1,2,1);imshow(I);title('image originale'); 
+%subplot(1,2,2);
+imshow(255-abs(g),[0,255]);%title('image filtr?e');
 
 
 % --------------------------------------------------------------------
@@ -349,7 +472,25 @@ function Laplacien_Callback(hObject, eventdata, handles)
 % hObject    handle to Laplacien (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+image=handles.courant_data;
+%image=imnoise(imageO,'salt & pepper', 0.05);
+[n,m]=size(image);
+image = double(image);
+%b=image;
+[n m]=size(image);
+b=zeros(n,m);
+%M1=[0 1 0;1 -4 1;0 1 0];
+M1=[-1 -1 -1;-1 8 -1;-1 -1 -1];
+for i=2:n-1
+    for j=2:m-1
+        V=image((i-1:i+1),(j-1:j+1));
+        S=V.*M1;
+        b(i,j)=sum(S(:));
+    end
+end
+b=uint8(b);
+axes(handles.imgT);
+     subimage(b);
 
 % --------------------------------------------------------------------
 function Gradient_Callback(hObject, eventdata, handles)
@@ -430,8 +571,7 @@ for i=4:(m-3)
 output(i,j)=sqrt(outputhor(i,j)*outputhor(i,j) + outputver(i,j)*outputver(i,j)); 
    end
 end
-%outputhor=uint8(outputhor); 
-%outputver=uint8(outputver); 
+
 output=uint8(output); 
 axes(handles.imgT);
 subimage(output);
@@ -442,6 +582,43 @@ function Prewitt_Callback(hObject, eventdata, handles)
 % hObject    handle to Prewitt (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+image=handles.courant_data;
+[n,m]=size(image);
+image = double(image);
+output=image;
+%image=rgb2gray(image);
+
+output=zeros(size(image)); 
+outputhor=zeros(size(image)); 
+outputver=zeros(size(image)); 
+%maskhor = [-1,0,1;-b,0,b;-1,0,1]; 
+%maskver = [-1,-b,-1;0,0,0;1,b,1];
+%b=1 pour prewitt
+maskhor = [-1,0,1;-1,0,1;-1,0,1]; 
+maskver = [-1,-1,-1;0,0,0;1,1,1];
+
+for i=4:(m-3)
+   for j=4:(n-3) 
+      for k=1:3          
+          for l=1:3
+            outputhor(i,j) = outputhor(i,j)+image(i-k,j-l)*maskhor(k,l);             
+            outputver(i,j) = outputver(i,j)+image(i-k,j-l)*maskver(k,l);          
+          end
+      end
+    end
+ end
+%mymin=min(min(output))
+%mymax=max(max(output))
+for i=4:(m-3)
+   for j=4:(n-3) 
+output(i,j)=sqrt(outputhor(i,j)*outputhor(i,j) + outputver(i,j)*outputver(i,j)); 
+   end
+end
+%outputhor=uint8(outputhor); 
+%outputver=uint8(outputver); 
+output=uint8(output); 
+axes(handles.imgT);
+subimage(output);
 
 
 % --------------------------------------------------------------------
@@ -449,7 +626,35 @@ function Roberts_Callback(hObject, eventdata, handles)
 % hObject    handle to Roberts (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+image = handles.courant_data;
+[n,m]=size(image);
+image = double(image);
+ %num = get(handles.slider1, 'value');
+% set(handles.edit1, 'String', num2str(num));
+for x=1:n-1
+ for y=1:m-1
+  b(x,y)= abs(uint8( double(image(x,y))-double(image(x+1,y+1))))+ abs(uint8( double(image(x,y+1)) - double(image(x+1,y))));
+ end
+end
+    % num = get(handles.slider1, 'Value');
+    % set(handles.txt1, 'String', num2str(num));
+        %Seuillage
+        [n,m]=size(image);
+        for i=1:n-1
+         for j=1:m-1
+          if b(i,j) < 25
+            b(i,j)=0;
+          end
+         end
+        end
+           %
+  handles.ima_traite = b;
+  axes(handles.imgT);
+  subimage(b);
+%Grrr
+handles.output = hObject;
+% Update handles structure
+guidata(hObject, handles);
 
 % --------------------------------------------------------------------
 function Lineaire_Callback(hObject, eventdata, handles)
@@ -680,3 +885,162 @@ subimage(b);
 handles.ima_traite = b;
 handles.output = hObject;
 guidata(hObject, handles);
+
+
+% --------------------------------------------------------------------
+function Morphologie_Callback(hObject, eventdata, handles)
+% hObject    handle to Morphologie (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Erosion_Callback(hObject, eventdata, handles)
+% hObject    handle to Erosion (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+image=handles.courant_data;
+
+%se = strel('line',11,90);
+se = strel('disk',4);
+
+erodedI = imerode(image,se);
+
+nv=uint8(erodedI); 
+axes(handles.imgT);
+subimage(nv);
+
+
+% --------------------------------------------------------------------
+function Delatation_Callback(hObject, eventdata, handles)
+% hObject    handle to Delatation (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+image=handles.courant_data;
+
+%element structurant de type disc avec rayon = 4 pixel
+se = strel('disk',4);
+
+dilatedI = imdilate(image,se);
+
+nv=uint8(dilatedI); 
+axes(handles.imgT);
+subimage(nv);
+
+% --------------------------------------------------------------------
+function Ouverture_Callback(hObject, eventdata, handles)
+% hObject    handle to Ouverture (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+image=handles.courant_data;
+
+%element structurant de type disc avec rayon = 4 pixel
+se = strel('disk',4);
+
+O =  imopen(image,se);
+
+nv=uint8(O); 
+axes(handles.imgT);
+subimage(nv);
+
+% --------------------------------------------------------------------
+function Fermeture_Callback(hObject, eventdata, handles)
+% hObject    handle to Fermeture (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+image=handles.courant_data;
+
+%element structurant de type disc avec rayon = 4 pixel
+se = strel('disk',4);
+
+F = imclose(image,se);
+
+nv=uint8(F); 
+axes(handles.imgT);
+subimage(nv);
+
+
+% --------------------------------------------------------------------
+function Contours_interne_Callback(hObject, eventdata, handles)
+% hObject    handle to Contours_interne (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+image=handles.courant_data;
+
+%se = strel('line',11,90);
+se = strel('disk',4);
+
+erodedI = imerode(image,se);
+image=double(image)-double(erodedI);
+
+nv=uint8(image); 
+axes(handles.imgT);
+subimage(nv);
+
+
+% --------------------------------------------------------------------
+function Contours_Externe_Callback(hObject, eventdata, handles)
+% hObject    handle to Contours_Externe (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+image=handles.courant_data;
+
+%se = strel('line',11,90);
+se = strel('disk',4);
+
+dilatedI = imdilate(image,se);
+image=double(dilatedI)-double(image);
+nv=uint8(image); 
+axes(handles.imgT);
+subimage(nv);
+
+
+% --------------------------------------------------------------------
+function Contours_morphologique_Callback(hObject, eventdata, handles)
+% hObject    handle to Contours_morphologique (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+image=handles.courant_data;
+
+%se = strel('line',11,90);
+se = strel('disk',4);
+erodedI = imerode(image,se);
+dilatedI = imdilate(image,se);
+image=double(dilatedI)-double(erodedI);
+nv=uint8(image); 
+axes(handles.imgT);
+subimage(nv);
+
+% --------------------------------------------------------------------
+function Point_interet_Callback(hObject, eventdata, handles)
+% hObject    handle to Point_interet (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function SUSAN_Callback(hObject, eventdata, handles)
+% hObject    handle to SUSAN (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Harris_Callback(hObject, eventdata, handles)
+% hObject    handle to Harris (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Chapeau_haut_de_forme_blanc_Callback(hObject, eventdata, handles)
+% hObject    handle to Chapeau_haut_de_forme_blanc (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Chapeau_haut_de_forme_noir_Callback(hObject, eventdata, handles)
+% hObject    handle to Chapeau_haut_de_forme_noir (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
