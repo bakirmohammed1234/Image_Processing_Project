@@ -349,25 +349,7 @@ function Laplacien_Callback(hObject, eventdata, handles)
 % hObject    handle to Laplacien (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-image=handles.courant_data;
-%image=imnoise(imageO,'salt & pepper', 0.05);
-[n,m]=size(image);
-image = double(image);
-%b=image;
-[n m]=size(image);
-b=zeros(n,m);
-%M1=[0 1 0;1 -4 1;0 1 0];
-M1=[-1 -1 -1;-1 8 -1;-1 -1 -1];
-for i=2:n-1
-    for j=2:m-1
-        V=image((i-1:i+1),(j-1:j+1));
-        S=V.*M1;
-        b(i,j)=sum(S(:));
-    end
-end
-b=uint8(b);
-axes(handles.imgT);
-     subimage(b);
+
 
 % --------------------------------------------------------------------
 function Gradient_Callback(hObject, eventdata, handles)
@@ -448,7 +430,8 @@ for i=4:(m-3)
 output(i,j)=sqrt(outputhor(i,j)*outputhor(i,j) + outputver(i,j)*outputver(i,j)); 
    end
 end
-
+%outputhor=uint8(outputhor); 
+%outputver=uint8(outputver); 
 output=uint8(output); 
 axes(handles.imgT);
 subimage(output);
@@ -459,43 +442,6 @@ function Prewitt_Callback(hObject, eventdata, handles)
 % hObject    handle to Prewitt (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-image=handles.courant_data;
-[n,m]=size(image);
-image = double(image);
-output=image;
-%image=rgb2gray(image);
-
-output=zeros(size(image)); 
-outputhor=zeros(size(image)); 
-outputver=zeros(size(image)); 
-%maskhor = [-1,0,1;-b,0,b;-1,0,1]; 
-%maskver = [-1,-b,-1;0,0,0;1,b,1];
-%b=1 pour prewitt
-maskhor = [-1,0,1;-1,0,1;-1,0,1]; 
-maskver = [-1,-1,-1;0,0,0;1,1,1];
-
-for i=4:(m-3)
-   for j=4:(n-3) 
-      for k=1:3          
-          for l=1:3
-            outputhor(i,j) = outputhor(i,j)+image(i-k,j-l)*maskhor(k,l);             
-            outputver(i,j) = outputver(i,j)+image(i-k,j-l)*maskver(k,l);          
-          end
-      end
-    end
- end
-%mymin=min(min(output))
-%mymax=max(max(output))
-for i=4:(m-3)
-   for j=4:(n-3) 
-output(i,j)=sqrt(outputhor(i,j)*outputhor(i,j) + outputver(i,j)*outputver(i,j)); 
-   end
-end
-%outputhor=uint8(outputhor); 
-%outputver=uint8(outputver); 
-output=uint8(output); 
-axes(handles.imgT);
-subimage(output);
 
 
 % --------------------------------------------------------------------
@@ -503,35 +449,7 @@ function Roberts_Callback(hObject, eventdata, handles)
 % hObject    handle to Roberts (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-image = handles.courant_data;
-[n,m]=size(image);
-image = double(image);
- %num = get(handles.slider1, 'value');
-% set(handles.edit1, 'String', num2str(num));
-for x=1:n-1
- for y=1:m-1
-  b(x,y)= abs(uint8( double(image(x,y))-double(image(x+1,y+1))))+ abs(uint8( double(image(x,y+1)) - double(image(x+1,y))));
- end
-end
-    % num = get(handles.slider1, 'Value');
-    % set(handles.txt1, 'String', num2str(num));
-        %Seuillage
-        [n,m]=size(image);
-        for i=1:n-1
-         for j=1:m-1
-          if b(i,j) < 25
-            b(i,j)=0;
-          end
-         end
-        end
-           %
-  handles.ima_traite = b;
-  axes(handles.imgT);
-  subimage(b);
-%Grrr
-handles.output = hObject;
-% Update handles structure
-guidata(hObject, handles);
+
 
 % --------------------------------------------------------------------
 function Lineaire_Callback(hObject, eventdata, handles)
