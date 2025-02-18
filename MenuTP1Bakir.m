@@ -22,7 +22,7 @@ function varargout = MenuTP1Bakir(varargin)
 
 % Edit the above text to modify the response to help MenuTP1Bakir
 
-% Last Modified by GUIDE v2.5 16-Feb-2025 23:58:30
+% Last Modified by GUIDE v2.5 18-Feb-2025 22:49:38
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -153,7 +153,8 @@ function Fpb_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 I = handles.courant_data;
- F=fftshift(fft2(I)); 
+%transforme l'image de l'espace des pixels ? l'espace des fr?quences.
+ F=fftshift(fft2(I)); %d?place les fr?quences basses au centre du spectre de Fourier
 % %calcul de la taille de l'image; 
  M=size(F,1); 
  N=size(F,2); 
@@ -195,8 +196,8 @@ n=3;
 
 for i=1:M 
 for j=1:N 
-%H(i,j)=1/(1+(H0(i,j)/D0)^(2*n)); 
-G(i,j)=F(i,j)*H0(i,j); 
+H(i,j)=1/(1+(H0(i,j)/D0)^(2*n)); 
+G(i,j)=F(i,j)*H(i,j); 
 end 
 end 
 
@@ -205,34 +206,13 @@ g=ifft2(G);
 %subplot(1,2,1);imshow(I);title('image originale'); 
 %subplot(1,2,2);
 imshow(abs(g),[0,255]);%title('image filtr?e'); 
+
 % --------------------------------------------------------------------
 function menuFph_Callback(hObject, eventdata, handles)
 % hObject    handle to menuFph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-I=handles.courant_data;
-%charge; 
-F=fftshift(fft2(I)); 
-%calcul de la taille de l'image; 
-M=size(F,1); 
-N=size(F,2); 
-P=size(F,3); 
 
-H1=ones(M,N); 
-D0=1; 
-M2=round(M/2); 
-N2=round(N/2); 
-H1(M2-D0:M2+D0,N2-D0:N2+D0)=0; 
-for i=1:M 
-for j=1:N 
-G(i,j)=F(i,j)*H1(i,j); 
-end 
-end 
-g=ifft2(G); 
-%subplot(1,2,1);imshow(I);title('image originale'); 
-%subplot(1,2,2);
-imshow(255-abs(g),[0,255]);
-%title('image filtr?e');
 
 % --------------------------------------------------------------------
 function Fph_Callback(hObject, eventdata, handles)
@@ -258,8 +238,7 @@ G(i,j)=F(i,j)*H1(i,j);
 end 
 end 
 g=ifft2(G); 
-%subplot(1,2,1);imshow(I);title('image originale'); 
-%subplot(1,2,2);
+
 imshow(255-abs(g),[0,255]);
 %title('image filtr?e');
 
@@ -286,7 +265,8 @@ n=3;
 
 for i=1:M 
 for j=1:N 
-H(i,j)=1/(1+(H1(i,j)/D0)^(2*n)); 
+%H(i,j)=1/(1+(H1(i,j)/D0)^(2*n)); 
+H(i,j)=1/(1+(D0/H1(i,j))^(2*n));
 G(i,j)=F(i,j)*H(i,j); 
 end 
 end 
@@ -1217,3 +1197,15 @@ image=double(F)-double(image);
 nv=uint8(image); 
 axes(handles.imgT);
 subimage(nv);
+
+
+
+% --- Executes on button press in pushbutton1.
+function Back_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+ accueil;  
+
+   
+    close(handles.figure1);
